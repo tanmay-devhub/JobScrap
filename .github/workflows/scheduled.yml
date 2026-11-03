@@ -1,0 +1,26 @@
+name: scheduled
+
+# Times are America/Los_Angeles wall-clock (timezone-aware schedules; DST handled by GitHub).
+# Off the top of the hour because GitHub delays/drops scheduled runs under peak load.
+# Scheduled runs are best-effort: delays are possible and nothing here is exact-time delivery.
+on:
+  schedule:
+    - cron: "7 9 * * *" # daily ~09:07 PT: discover-if-due, collect, publish-if-due (every 3 days)
+      timezone: "America/Los_Angeles"
+    - cron: "37 8 * * 1" # weekly Monday ~08:37 PT: forced discovery, then collect
+      timezone: "America/Los_Angeles"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jobmonitor-state
+  cancel-in-progress: false
+
+jobs:
+  run:
+    uses: ./.github/workflows/_job.yml
+    with:
+      command: ${{ github.event.schedule == '37 8 * * 1' && 'run-force-discover' || 'run' }}
+      timeout: 45
+    secrets: inherit

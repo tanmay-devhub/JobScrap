@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jobmonitor"
+version = "0.1.0"
+description = "Free-first startup job monitor: discover startups and collect US-eligible jobs into SQLite / CSV / Google Sheets."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "httpx>=0.28,<0.29",
+    "beautifulsoup4>=4.12,<5",
+    "pydantic>=2.9,<3",
+    "pydantic-settings>=2.6,<3",
+    "PyYAML>=6.0,<7",
+    "tzdata>=2024.2",  # IANA zones on platforms without a system tz database (Windows)
+]
+
+[project.optional-dependencies]
+sheets = [
+    "google-api-python-client>=2.149,<3",
+    "google-auth>=2.35,<3",
+]
+playwright = [
+    "playwright>=1.48,<2",
+]
+dev = [
+    "pytest>=8.3,<9",
+    "ruff>=0.7,<0.9",
+]
+
+[project.scripts]
+jobmonitor = "jobmonitor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+jobmonitor = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
+ignore = [
+    "E501",
+    "C408",   # dict(key=...) is clearer for SQL parameter maps
+    "SIM118", # sqlite3.Row iterates values; .keys() is required
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -m 'not network'"
+pythonpath = ["tests"]
+markers = [
+    "network: opt-in tests that make real outbound requests (deselected by default)",
+]

@@ -1,0 +1,91 @@
+# Reusable job: restore SQLite state -> run one whitelisted command -> save state.
+# Callers serialize on the `jobmonitor-state` concurrency group.
+name: jobmonitor-job
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: "run | run-force-discover | discover | collect | publish | publish-force | recovery | status"
+        type: string
+        required: true
+      limit:
+        description: "max boards (recovery/collect)"
+        type: number
+        default: 0
+      timeout:
+        type: number
+        default: 45
+
+permissions:
+  contents: write # push to the state branch only (see README: protect main with a ruleset)
+
+jobs:
+  job:
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout }}
+    env:
+      JOBMONITOR_DB_PATH: data/jobmonitor.sqlite3
+      JOBMONITOR_CONFIG_PATH: ${{ vars.JOBMONITOR_CONFIG_PATH || 'config.example.yaml' }}
+      JOBMONITOR_SHEETS_ENABLED: ${{ vars.JOBMONITOR_SHEETS_ENABLED || 'false' }}
+      JOBMONITOR_LOG_LEVEL: INFO
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: true # needed for `git push` of the state branch
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+
+      - name: Install (hash-locked)
+        run: |
+          python -m pip install --require-hashes -r requirements.lock
+          python -m pip install --no-deps .
+
+      - name: Restore state
+        id: restore
+        run: jobmonitor state restore --branch state
+
+      - name: Run
+        id: run
+        env:
+          CMD: ${{ inputs.command }}
+          LIMIT: ${{ inputs.limit }}
+          JOBMONITOR_SHEETS_SPREADSHEET_ID: ${{ secrets.JOBMONITOR_SHEETS_SPREADSHEET_ID }}
+          JOBMONITOR_GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.JOBMONITOR_GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          case "$CMD" in
+            run)                jobmonitor run ;;
+            run-force-discover) jobmonitor run --force-discover ;;
+            discover)           jobmonitor discover ;;
+            collect)            if [ "$LIMIT" -gt 0 ]; then jobmonitor collect --limit "$LIMIT"; else jobmonitor collect; fi ;;
+            publish)            jobmonitor publish ;;
+            publish-force)      jobmonitor publish --force ;;
+            recovery)           jobmonitor unlock
+                                jobmonitor collect --limit "${LIMIT:-100}"
+                                jobmonitor publish --force ;;
+            status)             jobmonitor status ;;
+            *) echo "unknown command" >&2; exit 2 ;;
+          esac
+
+      # Persist whatever state exists, even after a partial failure of the run step.
+      - name: Save state
+        if: always() && steps.restore.outcome == 'success'
+        env:
+          LABEL: ${{ github.workflow }}-${{ github.run_id }}-${{ github.run_attempt }}
+        run: jobmonitor state save --branch state --run-label "$LABEL"
+
+      - name: Upload exports (backup copy; the state branch is authoritative)
+        if: always() && steps.restore.outcome == 'success'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: exports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: exports/
+          retention-days: 7
+          if-no-files-found: ignore

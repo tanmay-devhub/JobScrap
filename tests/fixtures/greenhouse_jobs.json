@@ -1,0 +1,46 @@
+{
+  "jobs": [
+    {
+      "absolute_url": "https://job-boards.greenhouse.io/examplerobotics/jobs/4001",
+      "id": 4001,
+      "internal_job_id": 9001,
+      "title": "Senior Backend Engineer",
+      "updated_at": "2026-10-20T10:00:00-04:00",
+      "first_published": "2026-09-01T09:00:00-04:00",
+      "requisition_id": "REQ-1",
+      "location": {"name": "San Francisco, CA | Seattle, WA"},
+      "metadata": [{"id": 1, "name": "Location Type", "value": "On-Site", "value_type": "single_select"}],
+      "language": "en"
+    },
+    {
+      "absolute_url": "https://job-boards.greenhouse.io/examplerobotics/jobs/4002",
+      "id": 4002,
+      "title": "Senior Backend Engineer",
+      "updated_at": "2026-10-20T10:00:00-04:00",
+      "first_published": "2026-09-01T09:00:00-04:00",
+      "requisition_id": "REQ-2",
+      "location": {"name": "San Francisco, CA | Seattle, WA"},
+      "metadata": []
+    },
+    {
+      "absolute_url": "https://job-boards.greenhouse.io/examplerobotics/jobs/4003",
+      "id": 4003,
+      "title": "Solutions Engineer",
+      "updated_at": "2026-10-28T10:00:00Z",
+      "first_published": "2026-10-28T10:00:00Z",
+      "location": {"name": "London, United Kingdom"},
+      "metadata": null
+    },
+    {
+      "absolute_url": "https://job-boards.greenhouse.io/examplerobotics/jobs/4004",
+      "id": 4004,
+      "title": "Developer Advocate",
+      "updated_at": null,
+      "first_published": null,
+      "location": {"name": "Remote"},
+      "metadata": [{"id": 2, "name": "Location Type", "value": "Remote", "value_type": "single_select"}]
+    },
+    {"id": null, "title": "broken row is skipped"}
+  ],
+  "meta": {"total": 5}
+}

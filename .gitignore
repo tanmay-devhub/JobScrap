@@ -1,0 +1,108 @@
+# jobmonitor .gitignore (this directory is the repository root).
+# Output directories are root-anchored (leading "/") so source packages such as
+# src/jobmonitor/exports/ and anything under tests/fixtures/ stay tracked.
+
+# --- secrets / credentials (targeted; ordinary *.json stays tracked) ---------
+.env
+.env.*
+!.env.example
+.envrc
+*service-account*.json
+*service_account*.json
+*credentials*.json
+client_secret*.json
+*-sa-key*.json
+*.pem
+*.key
+*.p12
+*.pfx
+/secrets/
+/.secrets/
+
+# --- local configuration overrides (config.yaml itself is trackable) --------
+config.local.yaml
+*.local.yaml
+*.local.yml
+
+# --- SQLite databases, journals, state-restore temp files -------------------
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*-journal
+*-wal
+*-shm
+*.restore-tmp
+/data/
+
+# --- generated exports, demo output, logs, temp files -----------------------
+/exports/
+/demo-output/
+/output/
+/*.csv
+.tmp-*.csv
+*.log
+/logs/
+*.tmp
+*.bak
+/tmp/
+
+# --- test / coverage reports ------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.hypothesis/
+/test-results/
+
+# --- Playwright artifacts, downloaded browsers, browser profiles -------------
+.playwright/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+ms-playwright/
+browser-profile*/
+.browser-profile*/
+user-data-dir/
+*.har
+
+# --- Python caches, environments, build outputs, package metadata -----------
+__pycache__/
+*.py[cod]
+.venv/
+/venv/
+/.venv*/
+*.egg-info/
+*.egg
+.eggs/
+/build/
+/dist/
+/wheels/
+pip-wheel-metadata/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.tox/
+.nox/
+.uv-cache/
+
+# --- IDE / editor / OS files -------------------------------------------------
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# --- agent handoff files belong in the parent workspace, not this repo -------
+/Agent.MD
+/AGENTS.md

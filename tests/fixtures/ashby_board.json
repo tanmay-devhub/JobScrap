@@ -1,0 +1,42 @@
+{
+  "apiVersion": "1",
+  "jobs": [
+    {
+      "id": "aaaaaaaa-0000-4000-8000-000000000001",
+      "title": " Security Engineer, Cloud",
+      "department": "Engineering",
+      "team": "Backend",
+      "employmentType": "FullTime",
+      "location": "Toronto, ON (HQ)",
+      "secondaryLocations": [
+        {"location": "Remote (Canada)", "address": {"postalAddress": {"addressCountry": "Canada"}}},
+        {"location": "Remote (US)", "address": {"postalAddress": {"addressCountry": "United States"}}}
+      ],
+      "publishedAt": "2026-04-07T17:12:35.753+00:00",
+      "isListed": true,
+      "isRemote": true,
+      "workplaceType": "Hybrid",
+      "address": {"postalAddress": {"addressRegion": "ON", "addressCountry": "Canada", "addressLocality": "Toronto"}},
+      "jobUrl": "https://jobs.ashbyhq.com/exampleai/aaaaaaaa-0000-4000-8000-000000000001",
+      "applyUrl": "https://jobs.ashbyhq.com/exampleai/aaaaaaaa-0000-4000-8000-000000000001/application",
+      "descriptionPlain": "Must be a U.S. citizen. Active Secret clearance."
+    },
+    {
+      "id": "aaaaaaaa-0000-4000-8000-000000000002",
+      "title": "Unlisted Role",
+      "location": "New York, NY",
+      "isListed": false,
+      "jobUrl": "https://jobs.ashbyhq.com/exampleai/aaaaaaaa-0000-4000-8000-000000000002"
+    },
+    {
+      "id": "aaaaaaaa-0000-4000-8000-000000000003",
+      "title": "Recruiter",
+      "location": "Remote",
+      "isListed": true,
+      "isRemote": true,
+      "workplaceType": null,
+      "publishedAt": "2026-10-30T12:00:00Z",
+      "jobUrl": "https://jobs.ashbyhq.com/exampleai/aaaaaaaa-0000-4000-8000-000000000003"
+    }
+  ]
+}

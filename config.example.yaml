@@ -1,0 +1,56 @@
+# jobmonitor sample configuration. Copy to config.yaml and adjust. No secrets belong here.
+# Every key is optional; defaults are shown. Unknown keys are rejected, so typos fail loudly.
+
+http:
+  user_agent: "jobmonitor/0.1 (+https://github.com/YOUR_ORG/YOUR_REPO)"  # identify yourself
+  timeout_seconds: 20
+  request_deadline_seconds: 45
+  max_response_bytes: 15728640       # 15 MiB
+  max_redirects: 5
+  max_concurrency: 4                 # total worker threads
+  per_host_concurrency: 2
+  per_host_min_interval_seconds: 1.0 # conservative politeness delay per host
+  max_retries: 3
+  backoff_base_seconds: 1.0
+  backoff_max_seconds: 30
+  max_retry_after_seconds: 120
+
+freshness:
+  baseline_recent_days: 3            # on a board's first scan, dated jobs newer than this are "new"
+  checkpoint_overlap_hours: 6
+  close_after_missing_scans: 2       # complete snapshots a job must be absent from before closing
+  repost_window_days: 30
+  reposts_count_as_new: false
+  disable_board_after_not_found: 5
+  retention_days: 180
+
+filters:                             # all optional; unknown values are never filtered out
+  worldwide_remote_counts_as_us: false
+  title_include_regex: null          # e.g. "engineer|scientist"
+  title_exclude_regex: null
+  departments_exclude: []
+  seniority_exclude: []              # intern, junior, senior, staff, principal, lead, manager, director, executive
+  exclude_citizenship_required: false
+  exclude_no_sponsorship: false
+
+discovery:
+  sources: [yc, techstars, a16z]     # order matters only for logging; dedup is by canonical domain
+  yc_batches: []                     # e.g. ["summer-2025"]; empty = YC companies currently hiring
+  max_companies_per_source: 200      # start small; raise once runtimes are measured
+  probe_ats: true
+  max_probes_per_run: 300
+
+collect:
+  max_boards_per_run: 500
+  fetch_descriptions: false          # Greenhouse descriptions cost bandwidth; Lever/Ashby include them anyway
+
+publish:
+  every_days: 3
+  csv_dir: exports
+  sheets_enabled: false              # or env JOBMONITOR_SHEETS_ENABLED=true
+
+# Curated companies with known boards (merged into discovery, source="seed").
+# These three are public boards verified during development.
+seed_companies:
+  - {name: Anthropic, website: "https://www.anthropic.com", ats: greenhouse, board: anthropic}
+  - {name: Ramp, website: "https://ramp.com", ats: ashby, board: ramp}

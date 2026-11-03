@@ -1,0 +1,7 @@
+[
+  {"id": 1, "name": "Example Robotics", "slug": "example-robotics", "website": "https://www.examplerobotics.example", "batch": "Summer 2025", "status": "Active", "isHiring": true, "url": "https://www.ycombinator.com/companies/example-robotics"},
+  {"id": 2, "name": "Gone Inc", "slug": "gone", "website": "https://gone.example", "batch": "Winter 2012", "status": "Inactive", "isHiring": false},
+  {"id": 3, "name": "Bought Co", "slug": "bought", "website": "https://bought.example/", "batch": "Winter 2015", "status": "Acquired"},
+  {"id": 4, "name": "Mystery", "slug": "mystery", "website": "", "batch": "Fall 2024", "status": ""},
+  {"id": 5, "name": "", "slug": "nameless"}
+]

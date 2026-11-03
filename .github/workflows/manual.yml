@@ -1,0 +1,30 @@
+name: manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: What to run
+        type: choice
+        default: run
+        options: [run, run-force-discover, discover, collect, publish, publish-force, status]
+      limit:
+        description: Max boards for collect (0 = configured default)
+        type: number
+        default: 0
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jobmonitor-state
+  cancel-in-progress: false
+
+jobs:
+  run:
+    uses: ./.github/workflows/_job.yml
+    with:
+      command: ${{ inputs.command }}
+      limit: ${{ inputs.limit }}
+      timeout: 60
+    secrets: inherit

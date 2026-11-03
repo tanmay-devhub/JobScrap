@@ -1,0 +1,28 @@
+name: recovery
+
+# Bounded catch-up after missed/failed runs: clears stale locks, scans at most `max_boards`
+# boards (least-recently attempted first), then force-publishes. Coverage is checkpoint-based,
+# so jobs posted during the gap are still detected.
+on:
+  workflow_dispatch:
+    inputs:
+      max_boards:
+        description: Maximum boards to scan
+        type: number
+        default: 100
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jobmonitor-state
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    uses: ./.github/workflows/_job.yml
+    with:
+      command: recovery
+      limit: ${{ inputs.max_boards }}
+      timeout: 20
+    secrets: inherit
